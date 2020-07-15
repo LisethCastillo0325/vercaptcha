@@ -1,10 +1,5 @@
 /* BASIC */
-
-html {
-    background-color: #56baed;
-  }
-  
-  body {
+body {
     background: -webkit-linear-gradient(90deg, #1122bb 10%, #3aade2 90%);
     background: -moz-linear-gradient(90deg, #1122bb 10%, #3aade2 90%);
     background: -ms-linear-gradient(90deg, #1122bb 10%, #3aade2 90%);
