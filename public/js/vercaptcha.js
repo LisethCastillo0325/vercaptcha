@@ -28,9 +28,9 @@ function validarCaptcha(){
 
 function habilitarBotones(){
     if(agregarbotones === false){
-        var boton1 = "<button id='linkUno' class='btn btn-dark ml-3 boton-link' type='button'>Link 1</button>";
-        var boton2 = "<button id='linkDos' class='btn btn-dark ml-3 boton-link' type='button'>Link 2</button>";
-        var boton3 = "<button id='linkTres' class='btn btn-dark ml-3 boton-link' type='button'>Link 3</button>";
+        var boton1 = "<button id='linkUno' class='btn btn-dark p-3 ml-3 boton-link' type='button'>Link 1</button>";
+        var boton2 = "<button id='linkDos' class='btn btn-dark p-3 ml-3 boton-link' type='button'>Link 2</button>";
+        var boton3 = "<button id='linkTres' class='btn btn-dark p-3 ml-3 boton-link' type='button'>Link 3</button>";
         $("#div-botones").addClass('animated fadeIn');
         $("#div-botones").append(boton1, boton2, boton3);
         inhabilitarBoton('validarCampos');
