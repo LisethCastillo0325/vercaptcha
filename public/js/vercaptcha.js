@@ -6,7 +6,8 @@ var contadorLinksBoton3 = 0;
 var finalLinksBoton1 = false;
 var finalLinksBoton2 = false;
 var finalLinksBoton3 = false;
-var agregarbotones = false;
+var agregarBotones = false;
+var url = "http://localhost/captchamvc/";
 
 function validarCaptcha(){
     idcaptcha     = document.getElementById("idcaptcha").value;
@@ -27,7 +28,7 @@ function validarCaptcha(){
 }
 
 function habilitarBotones(){
-    if(agregarbotones === false){
+    if(agregarBotones === false){
         var boton1 = "<button id='linkUno' class='btn btn-dark p-3 ml-3 boton-link' type='button'>Link 1</button>";
         var boton2 = "<button id='linkDos' class='btn btn-dark p-3 ml-3 boton-link' type='button'>Link 2</button>";
         var boton3 = "<button id='linkTres' class='btn btn-dark p-3 ml-3 boton-link' type='button'>Link 3</button>";
@@ -39,7 +40,7 @@ function habilitarBotones(){
 }
 
 function agregarEventoABotones(){
-    agregarbotones = true;
+    agregarBotones = true;
     agregarEventoABoton('linkUno');
     agregarEventoABoton('linkDos');
     agregarEventoABoton('linkTres');
@@ -55,7 +56,7 @@ function agregarEventoABoton($id){
 
 function obtenerLinksBotones(keyLink){
     if(finalLinksBoton1 === false || finalLinksBoton2 === false || finalLinksBoton3 === false){
-        $.post("http://localhost/captchamvc/captcha/apiObtenerCaptcha/", {idcaptcha: idcaptcha},
+        $.post(url+"captcha/apiObtenerCaptcha/", {idcaptcha: idcaptcha},
             function (data) {
                 manejadorLinks(keyLink, data['data']['links'][0][keyLink]);
             }, "json");
@@ -99,10 +100,8 @@ function manejadorLinks(botonID, links){
 }
 
 function abrirLink(url){
-    // Abrir nuevo tab
-    var win = window.open(url, '_blank');
-    // Cambiar el foco al nuevo tab 
-    win.focus();
+    var win = window.open(url, '_blank'); // Abrir nuevo tab
+    win.focus();  // Cambiar el foco al nuevo tab 
 }
 
 function inhabilitarBoton(id){
@@ -117,102 +116,40 @@ function alerta(tipo, titulo, mensaje){
     });
 }
 
-function confirmDelete(idcaptcha) {
+$(document).ready(function(){
+   
+    obtenerDatosLocalizacion();
+}); 
 
-    swal({
-        title: "Atención!!!",
-        text: "¿Esta seguro de eliminar el registro?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Eliminar!",
-        cancelButtonText: "Cancelar!",
-
-    }).then(result => {
-        swal("Eliminado!", "Su Registro ha sido eliminado.", "success");
-        if (result.value) {
-
-            //window.location.href="http://localhost/captchamvc/captcha/eliminar/"+idcaptcha;
-            $.post("http://localhost/captchamvc/captcha/eliminar/" + idcaptcha);
-            location.reload();
-
-        } else if (
-            // Read more about handling dismissals
-            result.dismiss === swal.DismissReason.cancel
-        ) {
-            swal("Cancelado", "Tu Registro esta seguro :)", "error");
+function obtenerDatosLocalizacion(){
+     // visitar https://www.iplocate.io/  
+    $.get("https://www.iplocate.io/api/lookup/",function(response){
+        if(response !== undefined || response !== null){
+            var datosLocalizacion = {
+                "captcha": $('#idcaptcha').val(),
+                "pais": response.country,
+                "region": response.subdivision,
+                "ciudad":  response.city,
+                "ip": response.ip
+            };
+            console.log(datosLocalizacion);
+            enviarDatos(datosLocalizacion);
         }
-        //swal.closeModal();
+    },"json");
+}
+
+function enviarDatos(datosLocalizacion){
+    $.ajax({
+        type: 'POST',
+        url: url+'captcha/api-agregar-visita/',
+        data: datosLocalizacion,
+        success: function(data){
+           resultado = JSON.parse(data);
+           if(resultado){
+               
+           }
+           console.log(resultado);
+        }
     });
 }
 
-
-function adiccionarCamposLinkUno() {
-
-    var campos_max          = 10;   //max de 10 campos
-
-    var x = 3;
-    $('#add_btn_1').click (function(e) {
-        e.preventDefault();     //prevenir novos clicks
-        if (x < campos_max) {
-            $('#link_1').append('<div class="form-group">\
-                                <input type="text" class="form-control form-control-sm" name="campo[]">\
-                                <a href="#" class="remover_campo">Remover</a>\
-                                </div>');
-            x++;
-        }
-    });
-    // Remover o div anterior
-    $('#listas').on("click",".remover_campo",function(e) {
-        e.preventDefault();
-        $(this).parent('div').remove();
-        x--;
-    });
-}
-
-function adiccionarCamposLinkDos() {
-
-    var campos_max          = 10;   //max de 10 campos
-
-    var x = 3;
-    $('#add_btn_2').click (function(e) {
-        e.preventDefault();     //prevenir novos clicks
-        if (x < campos_max) {
-            $('#link_2').append('<div class="form-group">\
-                                <input type="text" class="form-control form-control-sm" name="campo[]">\
-                                <a href="#" class="remover_campo">Remover</a>\
-                                </div>');
-            x++;
-        }
-    });
-    // Remover o div anterior
-    $('#listas').on("click",".remover_campo",function(e) {
-        e.preventDefault();
-        $(this).parent('div').remove();
-        x--;
-    });
-}
-
-
-function adiccionarCamposLinkTres() {
-
-    var campos_max          = 10;   //max de 10 campos
-
-    var x = 3;
-    $('#add_btn_3').click (function(e) {
-        e.preventDefault();     //prevenir novos clicks
-        if (x < campos_max) {
-            $('#link_3').append('<div class="form-group">\
-                                <input type="text" class="form-control form-control-sm" name="campo[]">\
-                                <a href="#" class="remover_campo">Remover</a>\
-                                </div>');
-            x++;
-        }
-    });
-    // Remover o div anterior
-    $('#listas').on("click",".remover_campo",function(e) {
-        e.preventDefault();
-        $(this).parent('div').remove();
-        x--;
-    });
-}
