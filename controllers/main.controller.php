@@ -6,7 +6,7 @@ class MainController extends Controller{
     }
 
     public function verificarCaptcha($id){
-        $resultado = Http::httpPost(constant('URL') . "captcha/apiObtenerCaptcha/", ["idcaptcha" => $id]);  //$this->httpPost($id);
+        $resultado = Http::httpPost(constant('URL_CAPTCHA') . "captcha/apiObtenerCaptcha/", ["idcaptcha" => $id]);  //$this->httpPost($id);
         if(!$resultado['OK'] || is_null($resultado['data'])){
             new ErrorsController('404');
         }else{

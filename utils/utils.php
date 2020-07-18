@@ -3,7 +3,7 @@ class Utils{
 
     
 
-    static function getUrlOrigin($s, $use_forwarded_host=false) {
+    static function obtenerUrlOrigen($s, $use_forwarded_host=false) {
         $ssl = ( ! empty($s['HTTPS']) && $s['HTTPS'] == 'on' ) ? true:false;
         $sp = strtolower( $s['SERVER_PROTOCOL'] );
         $protocol = substr( $sp, 0, strpos( $sp, '/'  )) . ( ( $ssl ) ? 's' : '' );
@@ -17,10 +17,10 @@ class Utils{
         return $protocol . '://' . $host;
     }
     
-    static function getFullUrl($s, $use_forwarded_host=false ) {
+    static function obtenerUrlCompleta($s, $use_forwarded_host=false ) {
         $urlScript = explode("index.php", $s['SCRIPT_NAME']);
-        $uri = str_replace(constant('PROJECT_NAME'), constant('PROJECT_NAME_API'), $urlScript[0]);
-        return self::getUrlOrigin($s, $use_forwarded_host ).$uri;
+        $uri = str_replace(constant('NOMBRE_PROYECTO'), constant('NOMBRE_PROYECTO_API'), $urlScript[0]);
+        return self::obtenerUrlOrigen($s, $use_forwarded_host ).$uri;
     }
 
 }

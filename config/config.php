@@ -1,7 +1,7 @@
 <?php
     require_once 'utils/utils.php';
 
-    define('PROJECT_NAME_API', 'admin-captcha');
-    define('PROJECT_NAME', 'vercaptcha');
-    define('URL', Utils::getFullUrl($_SERVER));
+    define('NOMBRE_PROYECTO_API', 'admin-captcha');
+    define('NOMBRE_PROYECTO', 'vercaptcha');
+    define('URL_CAPTCHA', Utils::obtenerUrlCompleta($_SERVER));
 ?>
