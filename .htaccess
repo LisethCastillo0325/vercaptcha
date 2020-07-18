@@ -1,3 +1,9 @@
+# Impedir que se pueda ver el listado de contenidos de un directorio
+
+Options All -Indexes
+
+# Url Amigables
+
 RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !-d

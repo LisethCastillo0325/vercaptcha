@@ -1,4 +1,4 @@
-<?php include 'layout/header.php'; ?>
+<?php include 'views/layout/header.php'; ?>
 
 <!-- <div  class="row mt-3 md-3 mb-3 justify-content-center"> -->
 
@@ -31,5 +31,5 @@
 </div>
 
 
-<?php include 'layout/footer.php'; ?>
+<?php include 'views/layout/footer.php'; ?>
 <script src="public/js/vercaptcha.js" type="text/javascript"></script>
