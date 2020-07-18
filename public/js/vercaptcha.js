@@ -7,7 +7,7 @@ var finalLinksBoton1 = false;
 var finalLinksBoton2 = false;
 var finalLinksBoton3 = false;
 var agregarBotones = false;
-var url = "http://localhost/captchamvc/";
+var url = document.getElementById("url").value;
 
 function validarCaptcha(){
     idcaptcha     = document.getElementById("idcaptcha").value;
@@ -64,7 +64,7 @@ function obtenerLinksBotones(keyLink){
 }
 
 function manejadorLinks(botonID, links){
-    console.log('links: ', links);
+    //console.log('links: ', links);
 
     switch (botonID) {
         case 'linkUno':
@@ -132,7 +132,7 @@ function obtenerDatosLocalizacion(){
                 "ciudad":  response.city,
                 "ip": response.ip
             };
-            console.log(datosLocalizacion);
+            //console.log(datosLocalizacion);
             enviarDatos(datosLocalizacion);
         }
     },"json");
@@ -148,7 +148,7 @@ function enviarDatos(datosLocalizacion){
            if(resultado){
                
            }
-           console.log(resultado);
+           //console.log(resultado);
         }
     });
 }

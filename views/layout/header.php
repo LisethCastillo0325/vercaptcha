@@ -11,3 +11,4 @@
     <link rel="stylesheet" href="public/css/estilo.css">
 </head>
 <body ondragstart="return false" onselectstart="return false" oncontextmenu="return false">
+<input type="hidden" id="url" value="<?=constant('URL')?>" >
