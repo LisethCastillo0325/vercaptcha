@@ -205,4 +205,16 @@ body {
   #icon {
     width:60%;
   }
-  
+
+
+
+  /* -------------------------------------- */
+#valUno,
+#valDos {
+  background: YELLOW;
+  WIDTH: 110PX;
+  HEIGHT: 60PX;
+  text-align: center;
+  font-size: 17pt;
+  font-weight: bold;
+}
