@@ -29,7 +29,7 @@
             <span><?=$this->captcha['cantidadVisitas']+1?></span>
         </i>
     </div>
-    <span class="fadeIn second">Visitas</span>
+    <span class="fadeIn second texto-visitas">Visitas</span>
 </div>
 
 <?php include 'views/layout/footer.php'; ?>
