@@ -1,5 +1,4 @@
 
-var idcaptcha;
 var contadorLinksBoton1 = 0;
 var contadorLinksBoton2 = 0;
 var contadorLinksBoton3 = 0;
@@ -7,20 +6,27 @@ var finalLinksBoton1 = false;
 var finalLinksBoton2 = false;
 var finalLinksBoton3 = false;
 var agregarBotones = false;
+var codigoCaptcha;
+var idcaptcha = document.getElementById('idcaptcha').value; 
+var divAlerta = document.getElementById('alerta');
 var url = document.getElementById("url").value;
 
+$(document).ready(function(){
+    obtenerDatosLocalizacion();
+    generarCodigo();
+}); 
+
 function validarCaptcha(){
-    idcaptcha     = document.getElementById("idcaptcha").value;
     var valorUno  = document.getElementById("valorUno").value;
     var valorDos  = document.getElementById("valorDos").value;
-    var valorTres = document.getElementById("valorTres").value;
-    var captchaValidar = valorUno+'-'+valorDos+'-'+valorTres;
-
-    if((valorUno).length === 0 || (valorDos).length === 0 || (valorTres).length === 0){
-        alerta('info','Debes completar los campos!','');
+    var captchaValidar = valorUno+'-'+valorDos;
+    if((valorUno).length === 0 || (valorDos).length === 0){
+        alerta('warning','Debes completar los campos!','');
     }else{
-        if(captchaValidar !== idcaptcha){
-            alerta('warning','Aún no logras resolver el captcha!','Intenta de nuevo.');
+        if(captchaValidar !== codigoCaptcha){
+            alertaTiempo('error','Incorrecto!','Intenta de nuevo.', 1300).then(function(){
+                generarCodigo();
+            });
         }else{
             habilitarBotones();
         }
@@ -64,7 +70,6 @@ function obtenerLinksBotones(keyLink){
 }
 
 function manejadorLinks(botonID, links){
-    //console.log('links: ', links);
 
     switch (botonID) {
         case 'linkUno':
@@ -109,24 +114,29 @@ function inhabilitarBoton(id){
 }
 
 function alerta(tipo, titulo, mensaje){
-    swal({
+    return swal({
         title: titulo,
         text: mensaje,
         type: tipo
     });
 }
 
-$(document).ready(function(){
-   
-    obtenerDatosLocalizacion();
-}); 
+function alertaTiempo(tipo, titulo, mensaje, tiempo){
+    return swal({
+        title: titulo,
+        text: mensaje,
+        type: tipo,
+        showConfirmButton: false,
+        timer: tiempo
+    });
+}
 
 function obtenerDatosLocalizacion(){
      // visitar https://www.iplocate.io/  
     $.get("https://www.iplocate.io/api/lookup/",function(response){
         if(response !== undefined || response !== null){
             var datosLocalizacion = {
-                "captcha": $('#idcaptcha').val(),
+                "captcha": idcaptcha,
                 "pais": response.country,
                 "region": response.subdivision,
                 "ciudad":  response.city,
@@ -145,11 +155,32 @@ function enviarDatos(datosLocalizacion){
         data: datosLocalizacion,
         success: function(data){
            resultado = JSON.parse(data);
-           if(resultado){
-               
-           }
            //console.log(resultado);
         }
     });
 }
 
+function generarCodigo(){
+    var letras  = new Array("A","B","C","D","F","G","H","K","W","X","Y","Z");
+    var posicionLetra1 = Math.floor(Math.random()*11);
+    var posicionLetra2 = Math.floor(Math.random()*11);
+    while(posicionLetra1==posicionLetra2){
+        posicionLetra2 = Math.floor(Math.random()*11);	
+    }
+
+    var letra1 = letras[posicionLetra1];
+    var letra2 = letras[posicionLetra2];
+    var numero1 = "";
+    var numero2 = "";
+
+    for(var i=0;i<3;i++){
+        numero1=numero1+""+Math.floor(Math.random()*9);	
+        numero2=numero2+""+Math.floor(Math.random()*9);	
+    }
+
+    codigo1 = letra1+numero1;
+    codigo2 = letra2+numero2;
+    codigoCaptcha = codigo1+"-"+codigo2;
+
+    document.getElementById("codigo-captcha").innerHTML="<span class='fadeIn'>"+codigo1+"</span><span class='fadeIn white'>-</span><span class='fadeIn'>"+codigo2+"</span>";
+}
