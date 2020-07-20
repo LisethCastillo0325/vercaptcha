@@ -25,7 +25,7 @@
     <div id="div-botones" class="row justify-content-center mb-2">
     </div>
     <div class="visitas-captcha fadeIn first" title="Visita número <?=$this->captcha['cantidadVisitas']+1?>">
-        <i class="fa fa-eye fa-2x " aria-hidden="true" > 
+        <i class="fa fa-eye fa-2x " aria-hidden="true" > <br>
             <span><?=$this->captcha['cantidadVisitas']+1?></span>
         </i>
     </div>
