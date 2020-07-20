@@ -174,13 +174,13 @@ function generarCodigo(){
     var numero2 = "";
 
     for(var i=0;i<3;i++){
-        numero1=numero1+""+Math.floor(Math.random()*9);	
-        numero2=numero2+""+Math.floor(Math.random()*9);	
+        numero1=numero1+""+Math.floor((Math.random()*8)+1);	
+        numero2=numero2+""+Math.floor((Math.random()*8)+1);	
     }
 
     codigo1 = letra1+numero1;
     codigo2 = letra2+numero2;
     codigoCaptcha = codigo1+"-"+codigo2;
 
-    document.getElementById("codigo-captcha").innerHTML="<span class='fadeIn'>"+codigo1+"</span><span class='fadeIn white'>-</span><span class='fadeIn'>"+codigo2+"</span>";
+    document.getElementById("codigo-captcha").innerHTML="<span class='fadeIn'>"+codigo1+"</span><span class='fadeIn white'> - </span><span class='fadeIn'>"+codigo2+"</span>";
 }
