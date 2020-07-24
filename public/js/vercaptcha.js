@@ -8,7 +8,6 @@ var finalLinksBoton3 = false;
 var agregarBotones = false;
 var codigoCaptcha;
 var idcaptcha = document.getElementById('idcaptcha').value; 
-var divAlerta = document.getElementById('alerta');
 var url = document.getElementById("url").value;
 
 $(document).ready(function(){
@@ -132,20 +131,57 @@ function alertaTiempo(tipo, titulo, mensaje, tiempo){
 }
 
 function obtenerDatosLocalizacion(){
-     // visitar https://www.iplocate.io/  
-    $.get("https://www.iplocate.io/api/lookup/",function(response){
-        if(response !== undefined || response !== null){
-            var datosLocalizacion = {
-                "captcha": idcaptcha,
-                "pais": response.country,
-                "region": response.subdivision,
-                "ciudad":  response.city,
-                "ip": response.ip
-            };
-            //console.log(datosLocalizacion);
-            enviarDatos(datosLocalizacion);
+
+    $.ajax({
+        type: 'POST',
+        url: url+"ipapi/api-obtener-ipapi-seleccionado/",
+        data : { pagina: "vercaptcha"},
+        async: true,
+        success: function(data) {
+            resultado = JSON.parse(data);
+            //console.log(resultado);
+            if(! resultado.OK){
+                alerta("error", "Error", resultado.mensaje);
+            }else{
+                if(resultado.data === undefined || resultado.data === null){
+                    console.log('No se encontró información de api seleccionado para registrar los datos de vista del usuario.');
+                }else{
+                    consumoApi(resultado.data.urlConsumo, resultado.data.datosRespuesta);
+                }
+            }
+        },
+        error: function() {
+            alerta("error","No es posible completar la operación!","");
+        }
+    });
+}
+
+function consumoApi(urlConsumo, datosRespuesta){
+
+    $.get(urlConsumo, function(response){
+        
+        if(datoValidoApi(response)){
+            if(datoValidoApi(response[datosRespuesta.pais]) && datoValidoApi(response[datosRespuesta.departamento]) && datoValidoApi(response[datosRespuesta.ciudad]) && datoValidoApi(response[datosRespuesta.ip])){
+                var datosLocalizacion = {
+                    "captcha": idcaptcha,
+                    "pais": response[datosRespuesta.pais],
+                    "dpto": response[datosRespuesta.departamento],
+                    "ciudad":  response[datosRespuesta.ciudad],
+                    "ip": response[datosRespuesta.ip]
+                };
+                //console.log(datosLocalizacion);
+                enviarDatos(datosLocalizacion);
+            }else{
+                console.log('Error en ', urlConsumo, ' no proporciona los datos de respuesta establecidos. Respuesta: ',response);
+            }
+        }else{
+            console.log('Error en la respuesta de ', urlConsumo, 'Respuesta: ',response);
         }
     },"json");
+}
+
+function datoValidoApi(dato){
+    return (dato !== undefined && dato !== null) ? true : false;
 }
 
 function enviarDatos(datosLocalizacion){
@@ -155,7 +191,7 @@ function enviarDatos(datosLocalizacion){
         data: datosLocalizacion,
         success: function(data){
            resultado = JSON.parse(data);
-           //console.log(resultado);
+           //console.log('datos: ', resultado);
         }
     });
 }

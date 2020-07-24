@@ -7,12 +7,12 @@ class Http {
      * @author parzibyte
      * https://parzibyte.me/blog
      */
-    public static function httpPost($url, $datos){
+    public static function httpPost($url, $datos, $method="POST"){
         // Crear opciones de la petición HTTP
         $opciones = array(
             "http" => array(
                 "header" => "Content-type: application/x-www-form-urlencoded\r\n",
-                "method" => "POST",
+                "method" => $method,
                 "content" => http_build_query($datos), # Agregar el contenido definido antes
             ),
         );
