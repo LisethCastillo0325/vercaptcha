@@ -161,16 +161,40 @@ function consumoApi(urlConsumo, datosRespuesta){
     $.get(urlConsumo, function(response){
         
         if(datoValidoApi(response)){
-            if(datoValidoApi(response[datosRespuesta.pais]) && datoValidoApi(response[datosRespuesta.departamento]) && datoValidoApi(response[datosRespuesta.ciudad]) && datoValidoApi(response[datosRespuesta.ip])){
-                var datosLocalizacion = {
-                    "captcha": idcaptcha,
-                    "pais": response[datosRespuesta.pais],
-                    "dpto": response[datosRespuesta.departamento],
-                    "ciudad":  response[datosRespuesta.ciudad],
-                    "ip": response[datosRespuesta.ip]
-                };
-                //console.log(datosLocalizacion);
-                enviarDatos(datosLocalizacion);
+            if(datoValidoApi(response[datosRespuesta.pais]) && datoValidoApi(response[datosRespuesta.paisCodigo]) && datoValidoApi(response[datosRespuesta.departamento]) && datoValidoApi(response[datosRespuesta.ciudad]) && datoValidoApi(response[datosRespuesta.ip])){
+                
+                var paisCodigo = response[datosRespuesta.paisCodigo];
+                var urlCountryCode = "http://api.worldbank.org/v2/country/"+paisCodigo+"?format=json";
+
+                $.get(urlCountryCode, function(responseCountryCode){
+                    
+                    var datosLocalizacion;
+                    var nombrePais;
+
+                    if(datoValidoApi(responseCountryCode)){
+                        nombrePais = responseCountryCode[1][0].name;
+                    }else{
+                        console.log('Error en la respuesta de ', urlCountryCode, 'Respuesta: ',responseCountryCode);
+                    }
+
+                    if(! datoValidoApi(nombrePais)){
+                        nombrePais = response[datosRespuesta.pais];
+                    }
+                    //console.log(nombrePais);
+
+                    datosLocalizacion = {
+                        "captcha": idcaptcha,
+                        "pais": nombrePais,
+                        "dpto": response[datosRespuesta.departamento],
+                        "ciudad":  response[datosRespuesta.ciudad],
+                        "ip": response[datosRespuesta.ip],
+                        "paisCodigo": paisCodigo
+                    };
+
+                    enviarDatos(datosLocalizacion);
+                }, "json");
+                
+               
             }else{
                 console.log('Error en ', urlConsumo, ' no proporciona los datos de respuesta establecidos. Respuesta: ',response);
             }
